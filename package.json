@@ -1,0 +1,22 @@
+{
+  "name": "admiral_api",
+  "version": "0.0.1",
+  "description": "Design and documentation for the public Admiral Sportwetten API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://dejanfajfar@github.com/admiral-sportwetten/api.git"
+  },
+  "author": "Dejan.fajfar@admiral.at, dejan@fajfar.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/admiral-sportwetten/api/issues"
+  },
+  "homepage": "https://github.com/admiral-sportwetten/api#readme",
+  "dependencies": {
+    "aglio": "^1.18.0"
+  }
+}

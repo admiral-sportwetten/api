@@ -51,7 +51,7 @@ A customer is a user known to the system with the potential to produce hold on t
                 "email": true
             }
         }
-        
+
 + Response 404 (application/json)
 
         {
@@ -95,7 +95,7 @@ A customer is a user known to the system with the potential to produce hold on t
                 "email": true
             }
         }
-        
+
 + Response 201 (application/json)
 
 + Response 403 (application/json)
@@ -110,7 +110,7 @@ Determine if the given user name is already taken.
 
 + parameters
     + customerName: John123 (required, string) - The customers unique name
-    
+
 ### Check customer name [GET]
 
 + Response 200 (application/json)
@@ -125,7 +125,7 @@ Determine if the given user name is already taken.
             "IsUnique": false,
             "Suggestions": ["John123!", "BetJohn123", "John1232"]
         }
-        
+
 
 ## Group Login
 
@@ -151,7 +151,7 @@ The customers session is managed usign the _login_ collection
             "SessionId": "21872364591487569123847512984765214765284",
             "Ttl": 12345534
         }
-        
+
 + Response 400 (application/json)
 
 
@@ -185,16 +185,17 @@ All functionality regarding betslip management
 
 ## Get betslip [/betslip/{customerName}]
 
-+ Parameters 
++ Parameters
     + customerName (required string) - The customers unique user name
 
 ### Get customers betslip [GET]
 
 + Response 200 (application/json)
     + Headers
-    
+
             Location: /betslip/john123
-        
+            X-Response-Time: 25ms
+
     + Body
 
             {
@@ -209,9 +210,7 @@ All functionality regarding betslip management
                         "BetName": "Endergebnis - *Tipp Salvadore*",
                         "Odd": 1.04
                         "Stake": 1.24,
-                        "PossibleWining": 1.29 
+                        "PossibleWining": 1.29
                     }
                 ]
             }
-
-

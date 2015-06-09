@@ -163,15 +163,19 @@ User authentication facilities
 
 + Response 200 (application/json)
 
-        {}
+        {
+            "SessionId": "21872364591487569123847512984765214765284",
+            "Ttl": 12345534
+        }
+        
++ Response 400 (application/json)
+
 
 ### Logout customer [DELETE]
 
 + Response 204 (application/json)
 
 ### Extend customer session [PUT]
-
-An existing customer session can be _extended_ by placing a PUT request. 
 
 + Response 201 (application/json)
 
@@ -181,3 +185,22 @@ An existing customer session can be _extended_ by placing a PUT request.
         }
 
 + Response 404 (appliction/json)
+
+### Extend customer session with timeout [PUT]
+
++ Request (application/json)
+
+        {
+            "Ttl": 1234345
+        }
+
++ Response 201 (application/json)
+
+        {
+            "SessionId": "21872364591487569123847512984765214765284",
+            "Ttl": 1234345
+        }
+
++ Response 404 (appliction/json)
+
++ Response 400 (application/json)

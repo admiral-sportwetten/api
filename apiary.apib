@@ -191,9 +191,27 @@ All functionality regarding betslip management
 ### Get customers betslip [GET]
 
 + Response 200 (application/json)
+    + Headers
+    
+            Location: /betslip/john123
+        
+    + Body
 
-        {
-            
-        }
+            {
+                "BetSlipType": "Single",
+                "Currency": "EUR",
+                "OddsDisplayFormat": "EUR",
+                "Odds": [
+                    {
+                        "OddId": "1a45a986-b028-4704-ae6f-6c9b3cd076c7"
+                        "IsLive": true,
+                        "EventName": "Uganda : Gambia",
+                        "BetName": "Endergebnis - *Tipp Salvadore*",
+                        "Odd": 1.04
+                        "Stake": 1.24,
+                        "PossibleWining": 1.29 
+                    }
+                ]
+            }
 
 

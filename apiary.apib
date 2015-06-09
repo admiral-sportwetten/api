@@ -133,23 +133,7 @@ User authentication facilities
 
 ## Session management [/login]
 
-### Login customer [POST]
-
-+ Request (application/json)
-
-        {
-            "UserName": "john123",
-            "Password": "john123Rocks"
-        }
-
-+ Response 200 (application/json)
-
-        {
-            "SessionId": "21872364591487569123847512984765214765284",
-            "Ttl": 123145234
-        }
-
-+ Response 403 (application/json)
+The customers session is managed usign the _login_ collection
 
 ### Login customer with timeout [POST]
 
@@ -175,16 +159,6 @@ User authentication facilities
 
 + Response 204 (application/json)
 
-### Extend customer session [PUT]
-
-+ Response 201 (application/json)
-
-        {
-            "SessionId": "21872364591487569123847512984765214765284",
-            "Ttl": 123145234
-        }
-
-+ Response 404 (appliction/json)
 
 ### Extend customer session with timeout [PUT]
 
@@ -204,3 +178,22 @@ User authentication facilities
 + Response 404 (appliction/json)
 
 + Response 400 (application/json)
+
+## Group Betslip
+
+All functionality regarding betslip management
+
+## Get betslip [/betslip/{customerName}]
+
++ Parameters 
+    + customerName (required string) - The customers unique user name
+
+### Get customers betslip [GET]
+
++ Response 200 (application/json)
+
+        {
+            
+        }
+
+

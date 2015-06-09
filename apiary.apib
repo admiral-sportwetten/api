@@ -1,5 +1,4 @@
 FORMAT: 1A
-HOST: http://aswapi.apiblueprint.org/
 
 # ASWAPI
 
@@ -152,12 +151,27 @@ User authentication facilities
 
 + Response 403 (application/json)
 
+### Login customer with timeout [POST]
+
++ Request (application/json)
+
+        {
+            "UserName": "john123",
+            "Password": "john123Rocks",
+            "Ttl": 12345534
+        }
+
++ Response 200 (application/json)
+
+        {}
 
 ### Logout customer [DELETE]
 
 + Response 204 (application/json)
 
 ### Extend customer session [PUT]
+
+An existing customer session can be _extended_ by placing a PUT request. 
 
 + Response 201 (application/json)
 
@@ -167,4 +181,3 @@ User authentication facilities
         }
 
 + Response 404 (appliction/json)
-        

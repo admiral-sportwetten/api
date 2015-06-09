@@ -4,11 +4,12 @@
   "description": "Design and documentation for the public Admiral Sportwetten API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "aglio -i apiary.apib -s"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://dejanfajfar@github.com/admiral-sportwetten/api.git"
+    "url": "https://github.com/admiral-sportwetten/api.git"
   },
   "author": "Dejan.fajfar@admiral.at, dejan@fajfar.com",
   "license": "ISC",

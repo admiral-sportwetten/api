@@ -132,18 +132,39 @@ Determine if the given user name is already taken.
 
 User authentication facilities
 
-## Login existing customer [/login]
+## Session management [/login]
 
 ### Login customer [POST]
 
-+ Request
++ Request (application/json)
+
         {
             "UserName": "john123",
             "Password": "john123Rocks"
         }
 
 + Response 200 (application/json)
+
         {
+            "SessionId": "21872364591487569123847512984765214765284",
+            "Ttl": 123145234
         }
 
++ Response 403 (application/json)
 
+
+### Logout customer [DELETE]
+
++ Response 204 (application/json)
+
+### Extend customer session [PUT]
+
++ Response 201 (application/json)
+
+        {
+            "SessionId": "21872364591487569123847512984765214765284",
+            "Ttl": 123145234
+        }
+
++ Response 404 (appliction/json)
+        

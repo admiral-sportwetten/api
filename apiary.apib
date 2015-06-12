@@ -140,15 +140,15 @@ The customers session is managed usign the _login_ collection
 + Request (application/json)
 
         {
-            "UserName": "john123",
-            "Password": "john123Rocks",
-            "Ttl": 12345534
+            "username": "john123",
+            "password": "john123Rocks",
+            "ttl": 12345534
         }
 
 + Response 200 (application/json)
 
         {
-            "SessionId": "21872364591487569123847512984765214765284",
+            "Token": "21872364591487569123847512984765214765284",
             "Ttl": 12345534
         }
 
@@ -171,7 +171,7 @@ The customers session is managed usign the _login_ collection
 + Response 201 (application/json)
 
         {
-            "SessionId": "21872364591487569123847512984765214765284",
+            "Token": "21872364591487569123847512984765214765284",
             "Ttl": 1234345
         }
 

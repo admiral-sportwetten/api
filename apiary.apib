@@ -2,7 +2,19 @@ FORMAT: 1A
 
 # ASWAPI
 
-ASWAPI is a simple REST API to interact with an online betting provider.
+ASWAPI stands for Admiral API which is to be the single point of entry for using
+Admiral Sportsbetting functionality.
+
+The API is designed to use all the commonly accepted principles of REST interface
+development.
+
+Used _html_ codes and thear meaning in the context of the API:
+* __200__ -> The request has completed successfully and a response is provided.
+* __201__ -> The request has completed successfully and the given item was persisted in the DB
+* __404__ -> The request has completed successfully but no data was found
+* __403__ -> The request was not processed because of invalid authorization or invalid authentication
+* __500__ -> The state of the request is not clear because something serious blew up
+
 
 ## Group Customer
 
@@ -214,3 +226,115 @@ All functionality regarding betslip management
                     }
                 ]
             }
+
+## Group Shops
+
+Functionality to retrieve and manage a list of all __therestrial__ shops.
+This also includes all functionall goodies for working with the list.
+
+## Basic shop operations [/shops]
+
+The basic shops operations include:
+* Get a list of all shops visible by the given session
+* Create a new shop
+* Edit shops
+* Delete a shop from the list
+
+### Get all shops [GET]
+
++ Request (application/json)
+    + Headers
+
+                Token: 2342897649283749618273691874123123
+
+    + Body
+
+                {}
+
++ Response 200 (appliction/json)
+    + Headers
+
+                X-Response-Time: 20ms
+
+    + Body
+
+                {
+                    "status": "OK",
+                    "listSize": 200,
+                    "sortedBy": "address",
+                    "shops": [
+                        {
+                            "id": "1a45a986-b028-4704-ae6f-6c9b3cd076c7",
+                            "address": {
+                            "street": "FirstStreet",
+                            "houserNumber": 2,
+                            "zip": 2030,
+                            "city": "MegaCity10"
+                        },
+                        "geo": {
+                            "lattitude": 14.234123,
+                            "longitude": 45.34534345
+                        },
+                        "capabilities": [
+                            "offlinetTerminals",
+                            "onlineTerminals",
+                            "gastro",
+                            "liveStreaming"
+                        ],
+                        "Description": "A nice little place to go and losse your money",
+                        "Image": "https://static.admiral.at/stores/megacity10.png"
+                        }
+                    ]
+                }
+
+## Find shop in vicinity [/shops/{lattitude}/{longitude}?limit={resultLimit}&measure={resultMeasure}]
+
+All results are sorted by asceding distance from the users current possition.
+
+
++ Parameters
+    + lattitude: 14.234234 (required decimal) - the customers current lattitude
+    + longitude: 45.2342342 (required decimal) - the customers current longitude
+    + resultLimit: 10 (optional number) - the maximal number of shops returned
+    + resultMeasure: km (optional string) - the measurement in whitch the distance is measured
+
+
+### Get all shops in my vicinity [GET]
+
+
++ Request (applition/json)
+
+    + Headers
+
+            Location: /shops/14.3242234/45.2342342
+
+    + Body
+
+            {
+                "distanceMeasurment": "km",
+                "resultCount": 10
+            }
+
++ Response 200 (application/json)
+
+                {
+                    "status": "OK",
+                    "listSize": 5,
+                    "maxRadius": 25,
+                    "shops": [
+                        {
+                            "geo":{
+                                "lattitude": 14.234234,
+                                "longitude": 45.2324234
+                            },
+                            "shortDescription": "Flagship store 1",
+                            "address":{
+                                "street": "Some street",
+                                "houserNumber": "25/3",
+                                "zip": "1200",
+                                "city": "Vienna",
+                                "country": "AUT"
+                            }
+                        }
+                    ]
+                }

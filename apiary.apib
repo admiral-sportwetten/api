@@ -329,7 +329,7 @@ All results are sorted by asceding distance from the users current possition.
     + lattitude: 14.234234 (required decimal) - the customers current lattitude
     + longitude: 45.2342342 (required decimal) - the customers current longitude
     + resultLimit: 10 (optional number) - the maximal number of shops returned
-    + resultMeasure: km (optional string) - the measurement in whitch the distance is measured
+    + resultMeasure: km ( string) - the measurement in whitch the distance is measured
 
 
 ### Get all shops in my vicinity [GET]
@@ -341,12 +341,7 @@ All results are sorted by asceding distance from the users current possition.
 
             Location: /shops/14.3242234/45.2342342
 
-    + Body
 
-            {
-                "distanceMeasurment": "km",
-                "resultCount": 10
-            }
 
 + Response 200 (application/json)
 

@@ -15,6 +15,24 @@ Used _html_ codes and thear meaning in the context of the API:
 * __403__ -> The request was not processed because of invalid authorization or invalid authentication
 * __500__ -> The state of the request is not clear because something serious blew up
 
+<table>
+    <tr>
+        <th>
+            Status code
+        </th>
+        <th>
+            Description
+        </th>
+    </tr>
+    <tr>
+        <td>
+            200
+        </td>
+        <td>
+            The request has completed successfully and a response is provided.
+        </td>
+    </tr>
+</table>
 
 ## Group Customer
 
@@ -31,38 +49,50 @@ A customer is a user known to the system with the potential to produce hold on t
 
 + Response 200 (application/json)
 
-        {
-            "salutation": "Mr.",
-            "name": "John",
-            "surname": "Doh",
-            "birthday": {
-                "day": 25,
-                "month": 10,
-                "year": 1982
-            },
-            "address":{
-                "street": "Some street",
-                "houserNumber": "25/3",
-                "zip": "1200",
-                "city": "Vienna",
-                "country": "AUT"
-            },
-            "password": "Johny123rocks",
-            "userName": "Johny123",
-            "userTimeZone": "GMT+2",
-            "currency": "EUR",
-            "oddsFormat": "EU",
-            "securityQuestion" : {
-                "question": "Happy place",
-                "answer": "back garden",
-                "hint": "Where I proposed"
-            },
-            "termsAndConditionsAccepted": true,
-            "newsletter" : {
-                "sms": false,
-                "email": true
+    + Attributes
+        + salutation: Mr/Mrs (string) - The salutation whith whicht the customer wishes to be addressed
+        + name: John (string) - The customers real name
+        + surname: Doh (string) - The customers real surname
+        + birthday: 25.10.1982 (string) - The customers birthday
+        + address (object)
+            + street: Last street (string) - The customers street of residence
+        + password: Johny123rocks (string) - The customers password 
+            
+        
+    + Body
+
+            {
+                "salutation": "Mr.",
+                "name": "John",
+                "surname": "Doh",
+                "birthday": {
+                    "day": 25,
+                    "month": 10,
+                    "year": 1982
+                },
+                "address":{
+                    "street": "Some street",
+                    "houserNumber": "25/3",
+                    "zip": "1200",
+                    "city": "Vienna",
+                    "country": "AUT"
+                },
+                "password": "Johny123rocks",
+                "userName": "Johny123",
+                "userTimeZone": "GMT+2",
+                "currency": "EUR",
+                "oddsFormat": "EU",
+                "securityQuestion" : {
+                    "question": "Happy place",
+                    "answer": "back garden",
+                    "hint": "Where I proposed"
+                },
+                "termsAndConditionsAccepted": true,
+                "newsletter" : {
+                    "sms": false,
+                    "email": true
+                }
             }
-        }
 
 + Response 404 (application/json)
 

@@ -8,13 +8,6 @@ Admiral Sportsbetting functionality.
 The API is designed to use all the commonly accepted principles of REST interface
 development.
 
-Used _html_ codes and thear meaning in the context of the API:
-* __200__ -> The request has completed successfully and a response is provided.
-* __201__ -> The request has completed successfully and the given item was persisted in the DB
-* __404__ -> The request has completed successfully but no data was found
-* __403__ -> The request was not processed because of invalid authorization or invalid authentication
-* __500__ -> The state of the request is not clear because something serious blew up
-
 <table>
     <tr>
         <th>
@@ -30,6 +23,79 @@ Used _html_ codes and thear meaning in the context of the API:
         </td>
         <td>
             The request has completed successfully and a response is provided.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            201
+        </td>
+        <td>
+            The request has completed successfully and the item is creates successfully.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            204
+        </td>
+        <td>
+            The request has completed successfully but no response is required.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            202
+        </td>
+        <td>
+            The request has completed successfully but the request processing has not finished yet.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            304
+        </td>
+        <td>
+            The requested document was not modified.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            400
+        </td>
+        <td>
+            The request could not be understood by the server.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            401
+        </td>
+        <td>
+            The request requires user authentication which was not provided
+        </td>
+    </tr>
+    <tr>
+        <td>
+            403
+        </td>
+        <td>
+            The server understood the request but will not fullfill it.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            404
+        </td>
+        <td>
+            The required document was not found.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            500
+        </td>
+        <td>
+            The server encountered an unrecoverable exception, which prevents the
+            request to complete.
         </td>
     </tr>
 </table>
@@ -56,9 +122,9 @@ A customer is a user known to the system with the potential to produce hold on t
         + birthday: 25.10.1982 (string) - The customers birthday
         + address (object)
             + street: Last street (string) - The customers street of residence
-        + password: Johny123rocks (string) - The customers password 
-            
-        
+        + password: Johny123rocks (string) - The customers password
+
+
     + Body
 
             {
@@ -232,7 +298,7 @@ All functionality regarding betslip management
 + Request (application/json)
 
     + Header
-    
+
             Token: 2347289372687236428734692834795h
 
 + Response 200 (application/json)
@@ -366,3 +432,101 @@ All results are sorted by asceding distance from the users current possition.
                         }
                     ]
                 }
+
+## Group Tickes
+
+## Get ticket data [/tickets/{ticketNumber}]
+
+Retrieves all available data for the given ticket.
+
+Ticket information is available without authorization.
+
++ Parameters
+    + ticketNumber: T-000000-7529-aa07-47b (required string) - the ticket number
+
+
+### Get ticket data [GET]
+
++ Request
+
+    + Headers
+
+            Location: /tickets/T-000000-7529-aa07-47b
+
++ Response 200 (application/json)
+
+    + Headers
+
+            X-Response-Time: 17ms
+
+    + Body
+
+            {
+                "status": "NotEvaluated",
+                "customer": "Johny123",
+                "CardId": "399085",
+                "timestamp": "2015-06-22T13:15:00Z",
+                "ticketId": "T0000007529AA0747B",
+                "deviceId": "066604",
+                "location": {
+                    "name": "TestLabor",
+                    "street" : "Novomatistrasse",
+                    "houserNumber": "5",
+                    "zipcode": 2352,
+                    "city": "Gumpoldskirchne"
+                },
+                "betType": "single"
+                "bets": [
+                {
+                    "name": "Klub-Freundsaftspiele (6BCD) Mlada Boleslav: AS Trencin",
+                    "gameId": "1a45a986-b028-4704-ae6f-6c9b3cd076c7",
+                    "odsType": "1X2",
+                    "selectedOdd": "X",
+                    "selectedOddId": "1a45a986-b028-4704-ae6f-6c9b3cd076c7",
+                    "stake": 50,
+                    "odd": 3.9
+                }
+                ],
+                "totalOdd": 3.9,
+                "totalStake": 50,
+                "oddsFormat": "EU",
+                "currency": "EUR",
+                "possibleWinnigs": 195
+            }
+
+## Check tiket status [/tickets/{ticketNumber}/status]
+
+Most users just want to see if their ticket has won or lost. For those we provide
+this easy to understand check method thatonly gives the information if the given
+ticket is evaluated successfully or not.
+
+In the case that the ticket evaluation did not yet hapen the method will answer
+with a 404.
+
++ Parameters
+    + ticketNumber:T-000000-7529-aa07-47b (required string) - The ticket number found on the physical ticket
+
+### Get ticket status [GET]
+
++ Request
+    + Headers
+
+            Location: /tickets/T-000000-7529-aa07-47b/status
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Response-Time: 10ms
+
+    + Body
+
+            {
+                "status": "won",
+                "hasWon": true
+            }
+
+
++ Response 404 (application/json)
+    + Headers
+
+            X-Response-Time: 5ms

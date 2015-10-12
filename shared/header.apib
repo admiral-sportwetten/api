@@ -1,0 +1,101 @@
+FORMAT: 1A
+
+# ASWAPI
+
+ASWAPI stands for Admiral API which is to be the single point of entry for using
+Admiral Sportsbetting functionality.
+
+The API is designed to use all the commonly accepted principles of REST interface
+development.
+
+<table>
+    <tr>
+        <th>
+            Status code
+        </th>
+        <th>
+            Description
+        </th>
+    </tr>
+    <tr>
+        <td>
+            200
+        </td>
+        <td>
+            The request has completed successfully and a response is provided.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            201
+        </td>
+        <td>
+            The request has completed successfully and the item is creates successfully.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            204
+        </td>
+        <td>
+            The request has completed successfully but no response is required.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            202
+        </td>
+        <td>
+            The request has completed successfully but the request processing has not finished yet.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            304
+        </td>
+        <td>
+            The requested document was not modified.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            400
+        </td>
+        <td>
+            The request could not be understood by the server.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            401
+        </td>
+        <td>
+            The request requires user authentication which was not provided
+        </td>
+    </tr>
+    <tr>
+        <td>
+            403
+        </td>
+        <td>
+            The server understood the request but will not fullfill it.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            404
+        </td>
+        <td>
+            The required document was not found.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            500
+        </td>
+        <td>
+            The server encountered an unrecoverable exception, which prevents the
+            request to complete.
+        </td>
+    </tr>
+</table>

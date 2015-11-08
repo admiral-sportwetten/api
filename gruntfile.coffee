@@ -3,13 +3,13 @@ module.exports = (grunt) ->
         pkg: grunt.file.readJSON 'package.json'
         concat:
             dist:
-                src: ['shared/header.apib', 'modules/*.apib']
+                src: ['shared/header.apib', 'README.md', 'modules/*.apib']
                 dest: 'dist/aswApi.apib'
         clean:
             build: ['dist/']
         watch:
             apib:
-                files: '**/*/*.apib'
+                files: ['**/*/*.apib', '!dist/aswApi.apib', 'README.md']
                 tasks: ['concat']
         run:
             options:

@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/admiral-sportwetten/api#readme",
   "dependencies": {
-    "aglio": "^1.18.0"
+    "aglio": "^2.2.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

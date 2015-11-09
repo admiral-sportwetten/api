@@ -1,0 +1,58 @@
+# Group Wallet
+
+Exposes functionality for wallet manipulation.
+
+## User specific wallet [/wallets/{user_identifier}]
+
+Required access grants
+
+| HTTP verb | Grant|
+| :--- | :--- |
+| GET | get_user_wallet |
+
++ parameters
+    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+
+### Get users wallet [GET]
+
+Gets the requered users wallet information.
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "user_id" : "john124",
+                "total_balance" : "120,00",
+                "details" : [
+                    {
+                        "type" : "realmoney",
+                        "balance" : "75,00",
+                        "currecy" : {
+                            "name" : "euro",
+                            "symbol" : "€"
+                        }
+                    },
+                    {
+                        "type" : "bonus",
+                        "balance" : "75,00",
+                        "currecy" : {
+                            "name" : "euro",
+                            "symbol" : "€"
+                        }
+                    }
+                ]
+            }

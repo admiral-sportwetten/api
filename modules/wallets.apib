@@ -1,6 +1,6 @@
 # Group Wallet
 
-Exposes functionality for wallet manipulation.
+Public access point to access wallet functionality
 
 ## User specific wallet [/wallets/{user_identifier}]
 
@@ -9,13 +9,15 @@ Required access grants
 | HTTP verb | Grant|
 | :--- | :--- |
 | GET | get_user_wallet |
+| POST | debit_user_wallet |
+| POST | credit_user_wallet |
 
 + parameters
     + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Get users wallet [GET]
 
-Gets the requered users wallet information.
+Gets the users wallet overview
 
 + Request (application/json)
 
@@ -36,23 +38,53 @@ Gets the requered users wallet information.
 
             {
                 "user_id" : "john124",
-                "total_balance" : "120,00",
-                "details" : [
+                "total_balance" : {
+                    "amount" : 120.00,
+                    "currency" : "EUR",
+                },
+                "history" : "wallets/john124/history",
+                "debit" : "wallets/john124/debit",
+                "startdebit" : "wallets/john124/startdebit",
+                "credit" : "wallets/john124/credit",
+                "startcredit" : "wallets/john124/startcredit",
+                "pockets" : [
                     {
                         "type" : "realmoney",
-                        "balance" : "75,00",
-                        "currecy" : {
-                            "name" : "euro",
-                            "symbol" : "€"
-                        }
+                        "balance" : {
+                            "amount" : 75.00,
+                            "currency" : "EUR"
+                        },
+                        "history" : "/wallets/john124/pockets/realmoney/transactions"
                     },
                     {
                         "type" : "bonus",
-                        "balance" : "75,00",
-                        "currecy" : {
-                            "name" : "euro",
-                            "symbol" : "€"
-                        }
+                        "balance" : {
+                            "amount" : 45.00,
+                            "currency" : "EUR"
+                        },
+                        "history" : "/wallets/john124/pockets/bonus/transactions"
                     }
                 ]
             }
+
+
+### Debit users wallet [POST]
+
+Debit the users wallet for the given ammount
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
+    + Body
+
+            {
+                "operation" : "debit",
+                "amount" : 20.00,
+                "currency" : "EUR",
+                "pocket" : "realmoney"
+            }
+
++ Response 200 (application/json)

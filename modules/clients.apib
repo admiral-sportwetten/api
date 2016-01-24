@@ -148,6 +148,7 @@ on a filed that is immutable then a __405__ status code will be returned.
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
     + Body
+
             {
                 "description": "This is the new description"
             }
@@ -185,6 +186,7 @@ on a filed that is immutable then a __405__ status code will be returned.
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
     + Body
+
             {
                 "client_id": "new_john124"
             }
@@ -311,3 +313,12 @@ if the client resource filed was not changed or a  __200__ if it was.
             {
                 "value" : "The resource new description"
             }
+
++ Response 204 (application/json)
+
+    + Header
+
+            Location: clients/john124/description
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private

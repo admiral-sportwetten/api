@@ -73,7 +73,7 @@ Gets the users wallet overview
 
 Debit the users wallet for the given ammount
 
-+ Request (application/json)
++ Request wit debit (application/json)
 
     + Header
 
@@ -88,7 +88,7 @@ Debit the users wallet for the given ammount
                 "pocket" : "realmoney"
             }
 
-+ Request (application/json)
++ Request with credit (application/json)
 
     + Header
 
@@ -353,7 +353,7 @@ Debit the users wallet for the given ammount
 + Request (application/json)
 
     + Attributes (object)
-        + transaction_id 023842poijflafijh8f73z920jfjow : (string, required) - The transaction id to cancel
+        + transaction_id: 023842poijflafijh8f73z920jfjow (string, required) - The transaction id to cancel
 
     + Header
 
@@ -393,6 +393,43 @@ Debit the users wallet for the given ammount
 + parameters
     + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
 
+### Complete transaction [POST]
+
++ Request (application/json)
+
+    + Attributes (object)
+        + transaction_id: 023842poijflafijh8f73z920jfjow (string, required) - The transaction id to cancel
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
+    + Body
+
+            {
+                "transaction_id" : "023842poijflafijh8f73z920jfjow"
+            }
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "result" : "OK",
+                "total_balance" : {
+                    "amount" : 140.00,
+                    "currency" : "EUR"
+                },
+                "transaction_id" : "023842poijflafijh8f73z920jfjow"
+            }
+
 ## Get the wallets transaction history [/wallets/{user_identifier}/history]
 
 | HTTP verb | Grant|
@@ -402,6 +439,52 @@ Debit the users wallet for the given ammount
 + parameters
     + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
 
+### Get wallet transaction history [GET]
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124/pockets/realmoney
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            [
+                {
+                    "timestamp" : "2016-02-12T13:43:22Z",
+                    "transaction_id" : "023842poijflafijh8f73z920jfjow"
+                    "type" : "payin",
+                    "direction" : "credit",
+                    "ammount" : 20,
+                    "currency" : {
+                        "name" : "Euro",
+                        "symbol" : "€",
+                        "iso_code" "EUR"
+                    }
+                },
+                {
+                    "timestamp" : "2016-02-12T13:43:22Z",
+                    "transaction_id" :
+                    "type" : "transfer",
+                    "direction" : "debit",
+                    "ammount" : 20,
+                    "currency" : {
+                        "name" : "Euro",
+                        "symbol" : "€",
+                        "iso_code" "EUR"
+                    }
+                }
+            ]
+
 ## Get wallets individual pocket details [/wallets/{user_identifier}/pockets/{pocket_identifier}]
 
 HTTP verb | Grant|
@@ -409,7 +492,37 @@ HTTP verb | Grant|
 | GET | view_wallet_pockets |
 
 + parameters
-   + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+   + user_identifier: john124 (string, required) : A mandatory stirng whith which we can uniquelly identify a single user
+   + pocket_identifier: realmoney (string, required) : String uniquelly identifying the pocket for which details should be retrieved
+
+### Get pocket details [GET]
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124/pockets/realmoney
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "pocket_id" : "realmoney",
+                "type": "realmoney",
+                "total_balance" : {
+                    "amount" : 140.00,
+                    "currency" : "EUR"
+                },
+                "history" : "wallets/john124/pockets/realmoney/history"
+            }
 
 ## Get wallets individual pockets history [/wallets/{user_identifier}/pockets/{pocket_identifier}/history]
 
@@ -419,3 +532,50 @@ HTTP verb | Grant|
 
 + parameters
    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+   + pocket_identifier: realmoney (string, required) : String uniquelly identifying the pocket whose history should be retrieved
+
+### Get pocket history [GET]
+
++ Request (application/json)
+
+   + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
++ Response 200 (application/json)
+
+   + Header
+
+            Location: wallets/john124/pockets/realmoney/history
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+   + Body
+
+            [
+               {
+                   "timestamp" : "2016-02-12T13:43:22Z",
+                   "transaction_id" : "023842poijflafijh8f73z920jfjow"
+                   "type" : "payin",
+                   "direction" : "credit",
+                   "ammount" : 20,
+                   "currency" : {
+                       "name" : "Euro",
+                       "symbol" : "€",
+                       "iso_code" "EUR"
+                   }
+               },
+               {
+                   "timestamp" : "2016-02-12T13:43:22Z",
+                   "transaction_id" :
+                   "type" : "transfer",
+                   "direction" : "debit",
+                   "ammount" : 20,
+                   "currency" : {
+                       "name" : "Euro",
+                       "symbol" : "€",
+                       "iso_code" "EUR"
+                   }
+               }
+            ]

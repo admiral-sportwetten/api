@@ -278,6 +278,7 @@ on a filed that is immutable then a __405__ status code will be returned.
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
     + Body
+
             {
                 "description": "This is the new description"
             }
@@ -315,6 +316,7 @@ on a filed that is immutable then a __405__ status code will be returned.
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
     + Body
+
             {
                 "client_id": "new_john124"
             }
@@ -442,3 +444,593 @@ if the client resource filed was not changed or a  __200__ if it was.
                 "value" : "The resource new description"
             }
 
++ Response 204 (application/json)
+
+    + Header
+
+            Location: clients/john124/description
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+# Group Wallet
+
+Public access point to access wallet functionality
+
+## User specific wallet [/wallets/{user_identifier}]
+
+Required access grants
+
+| HTTP verb | Grant|
+| :--- | :--- |
+| GET | get_user_wallet |
+| POST | debit_user_wallet |
+| POST | credit_user_wallet |
+
++ parameters
+    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+
+### Get users wallet [GET]
+
+Gets the users wallet overview
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "user_id" : "john124",
+                "total_balance" : {
+                    "amount" : 120.00,
+                    "currency" : "EUR",
+                },
+                "history" : "wallets/john124/history",
+                "debit" : "wallets/john124/debit",
+                "startdebit" : "wallets/john124/startdebit",
+                "credit" : "wallets/john124/credit",
+                "startcredit" : "wallets/john124/startcredit",
+                "pockets" : [
+                    {
+                        "type" : "realmoney",
+                        "balance" : {
+                            "amount" : 75.00,
+                            "currency" : "EUR"
+                        },
+                        "details" : "/wallets/john124/pockets/realmoney",
+                        "history" : "/wallets/john124/pockets/realmoney/history"
+                    },
+                    {
+                        "type" : "bonus",
+                        "balance" : {
+                            "amount" : 45.00,
+                            "currency" : "EUR"
+                        },
+                        "history" : "/wallets/john124/pockets/bonus/history"
+                    }
+                ]
+            }
+
+
+### Debit/Credit users wallet [POST]
+
+Debit the users wallet for the given ammount
+
++ Request wit debit (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
+    + Body
+
+            {
+                "operation" : "debit",
+                "amount" : 20.00,
+                "currency" : "EUR",
+                "pocket" : "realmoney"
+            }
+
++ Request with credit (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
+    + Body
+
+            {
+                "operation" : "credit",
+                "amount" : 20.00,
+                "currency" : "EUR",
+                "pocket" : "realmoney"
+            }
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "result" : "OK",
+                "total_balance" : {
+                    "amount" : 140.00,
+                    "currency" : "EUR"
+                },
+                "transaction_id" : "023842poijflafijh8f73z920jfjow"
+            }
+
+## Debit users wallet [/wallets/{user_identifier}/debit]
+
+| HTTP verb | Grant|
+| :--- | :--- |
+| POST | debit_user_wallet |
+
++ parameters
+    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+
+### Debit users wallet [POST]
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
+    + Body
+
+            {
+                "amount" : 20.00,
+                "currency" : "EUR",
+                "pocket" : "realmoney"
+            }
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "result" : "OK",
+                "total_balance" : {
+                    "amount" : 140.00,
+                    "currency" : "EUR"
+                },
+                "transaction_id" : "023842poijflafijh8f73z920jfjow"
+            }
+
+## Credit users wallet [/wallets/{user_identifier}/credit]
+
+| HTTP verb | Grant|
+| :--- | :--- |
+| POST | credit_user_wallet |
+
++ parameters
+    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+
+### Credit users wallet [POST]
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
+    + Body
+
+            {
+                "amount" : 20.00,
+                "currency" : "EUR",
+                "pocket" : "realmoney"
+            }
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "result" : "OK",
+                "total_balance" : {
+                    "amount" : 140.00,
+                    "currency" : "EUR"
+                },
+                "transaction_id" : "023842poijflafijh8f73z920jfjow"
+            }
+
+## Begin asyncronous debit [/wallets/{user_identifier}/startdebit]
+
+| HTTP verb | Grant|
+| :--- | :--- |
+| POST | debit_async_user_wallet |
+
++ parameters
+    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+
+### Debit users wallet [POST]
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
+    + Body
+
+            {
+                "amount" : 20.00,
+                "currency" : "EUR",
+                "pocket" : "realmoney"
+            }
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "result" : "OK",
+                "expires" : "2016-02-10T14:31:12Z",
+                "transaction_id" : "023842poijflafijh8f73z920jfjow"
+            }
+
+## Begin asyncronous creadit [/wallets/{user_identifier}/startcredit]
+
+| HTTP verb | Grant|
+| :--- | :--- |
+| POST | credit_async_user_wallet |
+
++ parameters
+    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+
+### Credit users wallet [POST]
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
+    + Body
+
+            {
+                "amount" : 20.00,
+                "currency" : "EUR",
+                "pocket" : "realmoney"
+            }
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "result" : "OK",
+                "expires" : "2016-02-10T14:31:12Z",
+                "transaction_id" : "023842poijflafijh8f73z920jfjow"
+            }
+
+## Storno transaction [/wallets/{user_identifier}/storno]
+
+| HTTP verb | Grant|
+| :--- | :--- |
+| POST | storno_user_wallet |
+
++ parameters
+    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+
+### Storno transaction [POST]
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
+    + Body
+
+            {
+                "transaction_id" : "023842poijflafijh8f73z920jfjow",
+                "reason" : "Storno by customer",
+                "tags" : ["storno", "STR_C"]
+            }
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "result" : "OK",
+                "storno_transaction_id" : "023842poijflafijh8f73z920jfjow"
+            }
+
+## Cancel an ongoing transaction [/wallets/{user_identifier}/cancel]
+
+| HTTP verb | Grant|
+| :--- | :--- |
+| POST | debit_async_user_wallet |
+| POST | credit_async_user_wallet |
+
++ parameters
+    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+
+### Cancel transaction [POST]
+
++ Request (application/json)
+
+    + Attributes (object)
+        + transaction_id: 023842poijflafijh8f73z920jfjow (string, required) - The transaction id to cancel
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
+    + Body
+
+            {
+                "transaction_id" : "023842poijflafijh8f73z920jfjow",
+                "reason" : "Canceled by customer",
+                "tags" : ["storno", "CAN_C"]
+            }
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "result" : "OK",
+                "storno_transaction_id" : "023842poijflafijh8f73z920jfjow"
+            }
+
+## Complete an ongoing transaction [/wallets/{user_identifier}/commit]
+
+| HTTP verb | Grant|
+| :--- | :--- |
+| POST | debit_async_user_wallet |
+| POST | credit_async_user_wallet |
+
++ parameters
+    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+
+### Complete transaction [POST]
+
++ Request (application/json)
+
+    + Attributes (object)
+        + transaction_id: 023842poijflafijh8f73z920jfjow (string, required) - The transaction id to cancel
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
+    + Body
+
+            {
+                "transaction_id" : "023842poijflafijh8f73z920jfjow"
+            }
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "result" : "OK",
+                "total_balance" : {
+                    "amount" : 140.00,
+                    "currency" : "EUR"
+                },
+                "transaction_id" : "023842poijflafijh8f73z920jfjow"
+            }
+
+## Get the wallets transaction history [/wallets/{user_identifier}/history]
+
+| HTTP verb | Grant|
+| :--- | :--- |
+| GET | view_wallet_history |
+
++ parameters
+    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+
+### Get wallet transaction history [GET]
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124/pockets/realmoney
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            [
+                {
+                    "timestamp" : "2016-02-12T13:43:22Z",
+                    "transaction_id" : "023842poijflafijh8f73z920jfjow"
+                    "type" : "payin",
+                    "direction" : "credit",
+                    "ammount" : 20,
+                    "currency" : {
+                        "name" : "Euro",
+                        "symbol" : "€",
+                        "iso_code" "EUR"
+                    }
+                },
+                {
+                    "timestamp" : "2016-02-12T13:43:22Z",
+                    "transaction_id" :
+                    "type" : "transfer",
+                    "direction" : "debit",
+                    "ammount" : 20,
+                    "currency" : {
+                        "name" : "Euro",
+                        "symbol" : "€",
+                        "iso_code" "EUR"
+                    }
+                }
+            ]
+
+## Get wallets individual pocket details [/wallets/{user_identifier}/pockets/{pocket_identifier}]
+
+HTTP verb | Grant|
+| :--- | :--- |
+| GET | view_wallet_pockets |
+
++ parameters
+   + user_identifier: john124 (string, required) : A mandatory stirng whith which we can uniquelly identify a single user
+   + pocket_identifier: realmoney (string, required) : String uniquelly identifying the pocket for which details should be retrieved
+
+### Get pocket details [GET]
+
++ Request (application/json)
+
+    + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
++ Response 200 (application/json)
+
+    + Header
+
+            Location: wallets/john124/pockets/realmoney
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+    + Body
+
+            {
+                "pocket_id" : "realmoney",
+                "type": "realmoney",
+                "total_balance" : {
+                    "amount" : 140.00,
+                    "currency" : "EUR"
+                },
+                "history" : "wallets/john124/pockets/realmoney/history"
+            }
+
+## Get wallets individual pockets history [/wallets/{user_identifier}/pockets/{pocket_identifier}/history]
+
+HTTP verb | Grant|
+| :--- | :--- |
+| GET | view_wallet_pocket_history |
+
++ parameters
+   + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+   + pocket_identifier: realmoney (string, required) : String uniquelly identifying the pocket whose history should be retrieved
+
+### Get pocket history [GET]
+
++ Request (application/json)
+
+   + Header
+
+            AccessToken: ijsefh938ru23p40i20irjdw09d832
+
++ Response 200 (application/json)
+
+   + Header
+
+            Location: wallets/john124/pockets/realmoney/history
+            Expires: Sun, 08 Nov 2015 21:11:41 +0000
+            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Cache-Control: private
+
+   + Body
+
+            [
+               {
+                   "timestamp" : "2016-02-12T13:43:22Z",
+                   "transaction_id" : "023842poijflafijh8f73z920jfjow"
+                   "type" : "payin",
+                   "direction" : "credit",
+                   "ammount" : 20,
+                   "currency" : {
+                       "name" : "Euro",
+                       "symbol" : "€",
+                       "iso_code" "EUR"
+                   }
+               },
+               {
+                   "timestamp" : "2016-02-12T13:43:22Z",
+                   "transaction_id" :
+                   "type" : "transfer",
+                   "direction" : "debit",
+                   "ammount" : 20,
+                   "currency" : {
+                       "name" : "Euro",
+                       "symbol" : "€",
+                       "iso_code" "EUR"
+                   }
+               }
+            ]

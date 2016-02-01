@@ -3,14 +3,14 @@
 ## Pocket Overview (object)
 + id: euro_pocket (string, required) - The pocket unique identifier
 + name: Euro pocket (string, required) - The user friendly name of the pocket
-+ balance: (Balance)
++ balance (Balance)
 + details: /wallets/john124/pockets/euro_pocket (string, required) - The relative link to the pocket details
 
-## Pocket Details (object)
+## Pocket Detail (object)
 + id: euro_pocket (string, required) - The pocket unique identifier
 + type: realmoney (string, required) - The type of the pocket
 + name: Euro pocket (string, required) - The user friendly name of the pocket
-+ balance: (Balance)
++ balance (Balance)
 + details: /wallets/john124/pockets/euro_pocket (string, required) - The relative link to the pocket details
 + transactions: /wallets/john124/pockets/euro_pocket/transactions" (string, required) - The relative link to the pocket transactions
 
@@ -31,7 +31,7 @@
 + credit: wallets/john124/credit (string, required) - The relative url used to credit the current wallet
 + startdebit: wallets/john124/startdebit (string, required) - The relative url used to start a asyncronous debit on the current wallet
 + startcredit: wallets/john124/startcredit (string, required) - The relative url used to start a asyncronous debit on the current wallet
-+ pockets: (array[Pocket Overview], required)
++ pockets (array[Pocket Overview], required)
 
 ## Transaction Response (object)
 + successfull: true (boolean, required) - Determines if the request was Successfull
@@ -50,4 +50,9 @@
 + type: payin (string, required) - The transaction type
 + direction: credit (string, required) - Denotes if the funds have been credited or debited to the wallet
 + ammount (Balance)
++ tags: payin, customer (array, required) - The associated tags for this transaction
+
+## Transaction Request (object)
++ amount: 20.00 (number, required) - The ammount that the wallet should be changed by
++ pocket: euro_pocket (string, required) - Identifies the pocket affected by the transaction
 + tags: payin, customer (array, required) - The associated tags for this transaction

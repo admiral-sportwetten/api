@@ -14,7 +14,7 @@ Required access grants
 | POST | credit_user_wallet |
 
 + Parameters
-    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+    + user_identifier: john124 (string, required) - A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Get users wallet [GET]
 
@@ -43,35 +43,22 @@ Debit the users wallet for the given ammount
 
 + Request wit debit (application/json)
 
+    + Attributes(Transaction Request)
+        + operation: debit (string, required) - The operation to execute on the wallet
+
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
-    + Body
-
-            {
-                "operation" : "debit",
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "realmoney",
-                "tags" : ["debit", "user"]
-            }
 
 + Request with credit (application/json)
 
+    + Attributes(Transaction Request)
+        + operation: credit (string, required) - The operation to execute on the wallet
+
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
-
-    + Body
-
-            {
-                "operation" : "credit",
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "realmoney",
-                "tags" : ["debit", "user"]
-            }
 
 + Response 200 (application/json)
     + Attributes(Transaction Response)
@@ -96,18 +83,11 @@ Debit the users wallet for the given ammount
 
 + Request (application/json)
 
+    + Attributes(Transaction Request)
+
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
-
-    + Body
-
-            {
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "euro_pocket",
-                "tags" : ["debit", "user"]
-            }
 
 + Response 200 (application/json)
     + Attributes(Transaction Response)
@@ -131,19 +111,12 @@ Debit the users wallet for the given ammount
 ### Credit users wallet [POST]
 
 + Request (application/json)
+    + Attributes(Transaction Response)
 
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
-    + Body
-
-            {
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "euro_pocket",
-                "tags" : ["debit", "user"]
-            }
 
 + Response 200 (application/json)
     + Attributes (Transaction Response)
@@ -167,19 +140,11 @@ Debit the users wallet for the given ammount
 ### Debit users wallet [POST]
 
 + Request (application/json)
+    + Attributes(Transaction Response)
 
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
-
-    + Body
-
-            {
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "realmoney",
-                "tags" : ["debit", "user"]
-            }
 
 + Response 206 (application/json)
     + Attributes(Async Transaction Response)
@@ -203,19 +168,11 @@ Debit the users wallet for the given ammount
 ### Credit users wallet [POST]
 
 + Request (application/json)
+    + Attributes(Transaction Response)
 
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
-
-    + Body
-
-            {
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "realmoney",
-                "tags" : ["debit", "user"]
-            }
 
 + Response 206 (application/json)
     + Attributes(Async Transaction Response)
@@ -332,6 +289,7 @@ Debit the users wallet for the given ammount
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
 
+
 ## Get the wallets transaction history [/wallets/{user_identifier}/transactions]
 
 | HTTP verb | Grant|
@@ -340,6 +298,7 @@ Debit the users wallet for the given ammount
 
 + parameters
     + user_identifier: john124 (string) - A mandatory stirng whith which we can uniquelly identify a single user
+
 
 ### Get wallet transaction history [GET]
 
@@ -350,7 +309,8 @@ Debit the users wallet for the given ammount
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
 + Response 200 (application/json)
-    + Attributes(array[Transaction Detail])
+    + Attributes(object)
+        + transactions (array[Transaction Detail])
 
     + Header
 
@@ -362,13 +322,14 @@ Debit the users wallet for the given ammount
 
 ## Get wallets individual pocket details [/wallets/{user_identifier}/pockets/{pocket_identifier}]
 
-HTTP verb | Grant|
+| HTTP verb | Grant|
 | :--- | :--- |
 | GET | view_wallet_pockets |
 
 + parameters
    + user_identifier: john124 (string, required) - A mandatory stirng whith which we can uniquelly identify a single user
    + pocket_identifier: euro_pocket (string, required) - String uniquelly identifying the pocket for which details should be retrieved
+
 
 ### Get pocket details [GET]
 
@@ -379,7 +340,7 @@ HTTP verb | Grant|
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
 + Response 200 (application/json)
-    + Attributes(Pocket Details)
+    + Attributes(Pocket Detail)
 
     + Header
 
@@ -388,9 +349,10 @@ HTTP verb | Grant|
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
 
+
 ## Get wallets individual pockets transactions [/wallets/{user_identifier}/pockets/{pocket_identifier}/transactions]
 
-HTTP verb | Grant|
+| HTTP verb | Grant|
 | :--- | :--- |
 | GET | view_wallet_pocket_history |
 
@@ -407,7 +369,9 @@ HTTP verb | Grant|
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
 + Response 200 (application/json)
-    + Attributes (array[Transaction Detail])
+
+    + Attributes(object)
+        + transactions (array[Transaction Detail])
 
    + Header
 

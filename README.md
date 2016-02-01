@@ -40,6 +40,7 @@ Except for special cases the following meanings, for HTTP verbs,  will be assume
 | 401 | The request requires user authentication which was not provided |
 | 403 | The server understood the request but will not fulfill it |
 | 404 | The requested resource was not found |
+| 429 | The server will not process the request because the request quota is reached |
 | 500 | The server encountered an unrecoverable exception, which prevents the request to complete |
 | 501 | The requested functionality is not implemented or you are not authorized to use it |
 

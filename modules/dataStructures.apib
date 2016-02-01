@@ -1,0 +1,53 @@
+# Data Structures
+
+## Pocket Overview (object)
++ id: euro_pocket (string, required) - The pocket unique identifier
++ name: Euro pocket (string, required) - The user friendly name of the pocket
++ balance: (Balance)
++ details: /wallets/john124/pockets/euro_pocket (string, required) - The relative link to the pocket details
+
+## Pocket Details (object)
++ id: euro_pocket (string, required) - The pocket unique identifier
++ type: realmoney (string, required) - The type of the pocket
++ name: Euro pocket (string, required) - The user friendly name of the pocket
++ balance: (Balance)
++ details: /wallets/john124/pockets/euro_pocket (string, required) - The relative link to the pocket details
++ transactions: /wallets/john124/pockets/euro_pocket/transactions" (string, required) - The relative link to the pocket transactions
+
+## Balance (object)
++ amount: 120.00 (number, required) - The wallets total balance by currency
++ currency (object)
+    + name: Euro (string, required) - The user friendly name of the currency
+    + symbol: € (string, optional) - Optional currency symbol
+    + iso_code: EUR (string, required) - The ISO 4217 currency code
+
+## Wallet (object)
++ customer (object)
+    + name: john124 (string, required) - The customers name
+    + id: 12312123123123123 (string, required) - The customers unique identifier
++ total_balance (array[Balance], required)
++ transactions: wallets/john124/transactions (string, required) - The relative url to the wallet history
++ debit: wallets/john124/debit (string, required) - The relative url used to debit the current wallet
++ credit: wallets/john124/credit (string, required) - The relative url used to credit the current wallet
++ startdebit: wallets/john124/startdebit (string, required) - The relative url used to start a asyncronous debit on the current wallet
++ startcredit: wallets/john124/startcredit (string, required) - The relative url used to start a asyncronous debit on the current wallet
++ pockets: (array[Pocket Overview], required)
+
+## Transaction Response (object)
++ successfull: true (boolean, required) - Determines if the request was Successfull
++ new_balance (Balance)
++ transaction_id: sdkjfbsidf123123 (string, required) - The transaction id for the completted transaction
++ details: /wallets/john124/transactions/sdkjfbsidf123123 (string, required) - The relative URL to the transaction details for this operation
+
+## Async Transaction Response (object)
++ transaction_id: sdkjfbsidf123123 (string, required) - The transaction id for the completted transaction
++ expires_at: `016-02-10T14:31:12Z` (string, required) - The time untill the transaction is keept open
+
+## Transaction Detail (object)
++ timestamp: `2016-02-12T13:43:22Z` (string, required) - The timestamp of the transaction in UTC
++ status: Completed (string, required) - The status of the transaction. Values are [Completed, Pending, Canceled, Storno]
++ transaction_id: sdkjfbsidf123123 (string, required) - The unique transaction id
++ type: payin (string, required) - The transaction type
++ direction: credit (string, required) - Denotes if the funds have been credited or debited to the wallet
++ ammount (Balance)
++ tags: payin, customer (array, required) - The associated tags for this transaction

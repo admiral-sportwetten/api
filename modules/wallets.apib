@@ -1,8 +1,9 @@
-# Group Wallet
+# Group Wallets
 
-Public access point to access wallet functionality
+Defines access methods for wallet functionality.
 
-## User specific wallet [/wallets/{user_identifier}]
+
+## Wallet [/wallets/{user_identifier}]
 
 Required access grants
 
@@ -12,12 +13,12 @@ Required access grants
 | POST | debit_user_wallet |
 | POST | credit_user_wallet |
 
-+ parameters
++ Parameters
     + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Get users wallet [GET]
 
-Gets the users wallet overview
+Retrieves the details for the given wallet, identified by the customer id
 
 + Request (application/json)
 
@@ -27,47 +28,14 @@ Gets the users wallet overview
 
 + Response 200 (application/json)
 
+    + Attributes(Wallet)
+
     + Header
 
             Location: wallets/john124
             Expires: Sun, 08 Nov 2015 21:11:41 +0000
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
-
-    + Body
-
-            {
-                "user_id" : "john124",
-                "total_balance" : {
-                    "amount" : 120.00,
-                    "currency" : "EUR",
-                },
-                "history" : "wallets/john124/history",
-                "debit" : "wallets/john124/debit",
-                "startdebit" : "wallets/john124/startdebit",
-                "credit" : "wallets/john124/credit",
-                "startcredit" : "wallets/john124/startcredit",
-                "pockets" : [
-                    {
-                        "type" : "realmoney",
-                        "balance" : {
-                            "amount" : 75.00,
-                            "currency" : "EUR"
-                        },
-                        "details" : "/wallets/john124/pockets/realmoney",
-                        "history" : "/wallets/john124/pockets/realmoney/history"
-                    },
-                    {
-                        "type" : "bonus",
-                        "balance" : {
-                            "amount" : 45.00,
-                            "currency" : "EUR"
-                        },
-                        "history" : "/wallets/john124/pockets/bonus/history"
-                    }
-                ]
-            }
-
 
 ### Debit/Credit users wallet [POST]
 
@@ -85,7 +53,8 @@ Debit the users wallet for the given ammount
                 "operation" : "debit",
                 "amount" : 20.00,
                 "currency" : "EUR",
-                "pocket" : "realmoney"
+                "pocket" : "realmoney",
+                "tags" : ["debit", "user"]
             }
 
 + Request with credit (application/json)
@@ -100,10 +69,12 @@ Debit the users wallet for the given ammount
                 "operation" : "credit",
                 "amount" : 20.00,
                 "currency" : "EUR",
-                "pocket" : "realmoney"
+                "pocket" : "realmoney",
+                "tags" : ["debit", "user"]
             }
 
 + Response 200 (application/json)
+    + Attributes(Transaction Response)
 
     + Header
 
@@ -111,17 +82,6 @@ Debit the users wallet for the given ammount
             Expires: Sun, 08 Nov 2015 21:11:41 +0000
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
-
-    + Body
-
-            {
-                "result" : "OK",
-                "total_balance" : {
-                    "amount" : 140.00,
-                    "currency" : "EUR"
-                },
-                "transaction_id" : "023842poijflafijh8f73z920jfjow"
-            }
 
 ## Debit users wallet [/wallets/{user_identifier}/debit]
 
@@ -145,10 +105,12 @@ Debit the users wallet for the given ammount
             {
                 "amount" : 20.00,
                 "currency" : "EUR",
-                "pocket" : "realmoney"
+                "pocket" : "euro_pocket",
+                "tags" : ["debit", "user"]
             }
 
 + Response 200 (application/json)
+    + Attributes(Transaction Response)
 
     + Header
 
@@ -156,17 +118,6 @@ Debit the users wallet for the given ammount
             Expires: Sun, 08 Nov 2015 21:11:41 +0000
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
-
-    + Body
-
-            {
-                "result" : "OK",
-                "total_balance" : {
-                    "amount" : 140.00,
-                    "currency" : "EUR"
-                },
-                "transaction_id" : "023842poijflafijh8f73z920jfjow"
-            }
 
 ## Credit users wallet [/wallets/{user_identifier}/credit]
 
@@ -190,10 +141,12 @@ Debit the users wallet for the given ammount
             {
                 "amount" : 20.00,
                 "currency" : "EUR",
-                "pocket" : "realmoney"
+                "pocket" : "euro_pocket",
+                "tags" : ["debit", "user"]
             }
 
 + Response 200 (application/json)
+    + Attributes (Transaction Response)
 
     + Header
 
@@ -201,17 +154,6 @@ Debit the users wallet for the given ammount
             Expires: Sun, 08 Nov 2015 21:11:41 +0000
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
-
-    + Body
-
-            {
-                "result" : "OK",
-                "total_balance" : {
-                    "amount" : 140.00,
-                    "currency" : "EUR"
-                },
-                "transaction_id" : "023842poijflafijh8f73z920jfjow"
-            }
 
 ## Begin asyncronous debit [/wallets/{user_identifier}/startdebit]
 
@@ -235,10 +177,12 @@ Debit the users wallet for the given ammount
             {
                 "amount" : 20.00,
                 "currency" : "EUR",
-                "pocket" : "realmoney"
+                "pocket" : "realmoney",
+                "tags" : ["debit", "user"]
             }
 
-+ Response 200 (application/json)
++ Response 206 (application/json)
+    + Attributes(Async Transaction Response)
 
     + Header
 
@@ -246,14 +190,6 @@ Debit the users wallet for the given ammount
             Expires: Sun, 08 Nov 2015 21:11:41 +0000
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
-
-    + Body
-
-            {
-                "result" : "OK",
-                "expires" : "2016-02-10T14:31:12Z",
-                "transaction_id" : "023842poijflafijh8f73z920jfjow"
-            }
 
 ## Begin asyncronous creadit [/wallets/{user_identifier}/startcredit]
 
@@ -277,10 +213,12 @@ Debit the users wallet for the given ammount
             {
                 "amount" : 20.00,
                 "currency" : "EUR",
-                "pocket" : "realmoney"
+                "pocket" : "realmoney",
+                "tags" : ["debit", "user"]
             }
 
-+ Response 200 (application/json)
++ Response 206 (application/json)
+    + Attributes(Async Transaction Response)
 
     + Header
 
@@ -289,13 +227,6 @@ Debit the users wallet for the given ammount
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
 
-    + Body
-
-            {
-                "result" : "OK",
-                "expires" : "2016-02-10T14:31:12Z",
-                "transaction_id" : "023842poijflafijh8f73z920jfjow"
-            }
 
 ## Storno transaction [/wallets/{user_identifier}/storno]
 
@@ -319,7 +250,7 @@ Debit the users wallet for the given ammount
             {
                 "transaction_id" : "023842poijflafijh8f73z920jfjow",
                 "reason" : "Storno by customer",
-                "tags" : ["storno", "STR_C"]
+                "tags" : ["storno", "STR_C", "by customer"]
             }
 
 + Response 200 (application/json)
@@ -334,7 +265,7 @@ Debit the users wallet for the given ammount
     + Body
 
             {
-                "result" : "OK",
+                "Successfull" : true,
                 "storno_transaction_id" : "023842poijflafijh8f73z920jfjow"
             }
 
@@ -354,20 +285,14 @@ Debit the users wallet for the given ammount
 
     + Attributes (object)
         + transaction_id: 023842poijflafijh8f73z920jfjow (string, required) - The transaction id to cancel
+        + reason: Canceled by customer (string, optional) - Optional clarification
+        + tags: storno, CAN_C (array, required) - Array of tags to associate with the transactions
 
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
-    + Body
-
-            {
-                "transaction_id" : "023842poijflafijh8f73z920jfjow",
-                "reason" : "Canceled by customer",
-                "tags" : ["storno", "CAN_C"]
-            }
-
-+ Response 200 (application/json)
++ Response 204 (application/json)
 
     + Header
 
@@ -375,13 +300,6 @@ Debit the users wallet for the given ammount
             Expires: Sun, 08 Nov 2015 21:11:41 +0000
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
-
-    + Body
-
-            {
-                "result" : "OK",
-                "storno_transaction_id" : "023842poijflafijh8f73z920jfjow"
-            }
 
 ## Complete an ongoing transaction [/wallets/{user_identifier}/commit]
 
@@ -391,7 +309,7 @@ Debit the users wallet for the given ammount
 | POST | credit_async_user_wallet |
 
 + parameters
-    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+    + user_identifier: john124 (string) - A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Complete transaction [POST]
 
@@ -404,13 +322,8 @@ Debit the users wallet for the given ammount
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
-    + Body
-
-            {
-                "transaction_id" : "023842poijflafijh8f73z920jfjow"
-            }
-
 + Response 200 (application/json)
+    + Attributes (Transaction Response)
 
     + Header
 
@@ -419,25 +332,14 @@ Debit the users wallet for the given ammount
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
 
-    + Body
-
-            {
-                "result" : "OK",
-                "total_balance" : {
-                    "amount" : 140.00,
-                    "currency" : "EUR"
-                },
-                "transaction_id" : "023842poijflafijh8f73z920jfjow"
-            }
-
-## Get the wallets transaction history [/wallets/{user_identifier}/history]
+## Get the wallets transaction history [/wallets/{user_identifier}/transactions]
 
 | HTTP verb | Grant|
 | :--- | :--- |
 | GET | view_wallet_history |
 
 + parameters
-    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+    + user_identifier: john124 (string) - A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Get wallet transaction history [GET]
 
@@ -448,42 +350,15 @@ Debit the users wallet for the given ammount
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
 + Response 200 (application/json)
+    + Attributes(array[Transaction Detail])
 
     + Header
 
-            Location: wallets/john124/pockets/realmoney
+            Location: wallets/john124/pockets/euro_pocket
             Expires: Sun, 08 Nov 2015 21:11:41 +0000
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
 
-    + Body
-
-            [
-                {
-                    "timestamp" : "2016-02-12T13:43:22Z",
-                    "transaction_id" : "023842poijflafijh8f73z920jfjow"
-                    "type" : "payin",
-                    "direction" : "credit",
-                    "ammount" : 20,
-                    "currency" : {
-                        "name" : "Euro",
-                        "symbol" : "€",
-                        "iso_code" "EUR"
-                    }
-                },
-                {
-                    "timestamp" : "2016-02-12T13:43:22Z",
-                    "transaction_id" :
-                    "type" : "transfer",
-                    "direction" : "debit",
-                    "ammount" : 20,
-                    "currency" : {
-                        "name" : "Euro",
-                        "symbol" : "€",
-                        "iso_code" "EUR"
-                    }
-                }
-            ]
 
 ## Get wallets individual pocket details [/wallets/{user_identifier}/pockets/{pocket_identifier}]
 
@@ -492,8 +367,8 @@ HTTP verb | Grant|
 | GET | view_wallet_pockets |
 
 + parameters
-   + user_identifier: john124 (string, required) : A mandatory stirng whith which we can uniquelly identify a single user
-   + pocket_identifier: realmoney (string, required) : String uniquelly identifying the pocket for which details should be retrieved
+   + user_identifier: john124 (string, required) - A mandatory stirng whith which we can uniquelly identify a single user
+   + pocket_identifier: euro_pocket (string, required) - String uniquelly identifying the pocket for which details should be retrieved
 
 ### Get pocket details [GET]
 
@@ -504,35 +379,24 @@ HTTP verb | Grant|
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
 + Response 200 (application/json)
+    + Attributes(Pocket Details)
 
     + Header
 
-            Location: wallets/john124/pockets/realmoney
+            Location: wallets/john124/pockets/euro_pocket
             Expires: Sun, 08 Nov 2015 21:11:41 +0000
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
 
-    + Body
-
-            {
-                "pocket_id" : "realmoney",
-                "type": "realmoney",
-                "total_balance" : {
-                    "amount" : 140.00,
-                    "currency" : "EUR"
-                },
-                "history" : "wallets/john124/pockets/realmoney/history"
-            }
-
-## Get wallets individual pockets history [/wallets/{user_identifier}/pockets/{pocket_identifier}/history]
+## Get wallets individual pockets transactions [/wallets/{user_identifier}/pockets/{pocket_identifier}/transactions]
 
 HTTP verb | Grant|
 | :--- | :--- |
 | GET | view_wallet_pocket_history |
 
-+ parameters
-   + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
-   + pocket_identifier: realmoney (string, required) : String uniquelly identifying the pocket whose history should be retrieved
++ Parameters
+   + user_identifier: john124 (string, required) - A mandatory stirng whith which we can uniquelly identify a single user
+   + pocket_identifier: euro_pocket (string, required) - String uniquelly identifying the pocket whose history should be retrieved
 
 ### Get pocket history [GET]
 
@@ -543,39 +407,11 @@ HTTP verb | Grant|
             AccessToken: ijsefh938ru23p40i20irjdw09d832
 
 + Response 200 (application/json)
+    + Attributes (array[Transaction Detail])
 
    + Header
 
-            Location: wallets/john124/pockets/realmoney/history
+            Location: wallets/john124/pockets/euro_pocket/transactions
             Expires: Sun, 08 Nov 2015 21:11:41 +0000
             Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
             Cache-Control: private
-
-   + Body
-
-            [
-               {
-                   "timestamp" : "2016-02-12T13:43:22Z",
-                   "transaction_id" : "023842poijflafijh8f73z920jfjow"
-                   "type" : "payin",
-                   "direction" : "credit",
-                   "ammount" : 20,
-                   "currency" : {
-                       "name" : "Euro",
-                       "symbol" : "€",
-                       "iso_code" "EUR"
-                   }
-               },
-               {
-                   "timestamp" : "2016-02-12T13:43:22Z",
-                   "transaction_id" :
-                   "type" : "transfer",
-                   "direction" : "debit",
-                   "ammount" : 20,
-                   "currency" : {
-                       "name" : "Euro",
-                       "symbol" : "€",
-                       "iso_code" "EUR"
-                   }
-               }
-            ]

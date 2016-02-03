@@ -40,8 +40,10 @@ Except for special cases the following meanings, for HTTP verbs,  will be assume
 | 304 | The requested document was not modified |
 | 400 | The request could not be understood by the server |
 | 401 | The request requires user authentication which was not provided |
-| 403 | The server understood the request but will not fulfill it |
+| 403 | The server understood the request but the request is not authorized to access the desired resource |
 | 404 | The requested resource was not found |
+| 419 | The Authentication timed out |
+| 429 | The server will not process the request because the request quota is reached |
 | 500 | The server encountered an unrecoverable exception, which prevents the request to complete |
 | 501 | The requested functionality is not implemented or you are not authorized to use it |
 
@@ -61,7 +63,7 @@ added by the API itself to include additional meta-information in the response.
 
  Taking that the following Language header is present in the request
 
-        Accept-Language:en-US,en;q=0.8,de-AT;q=0.6,de;q=0.4,sl;q=0.2
+        Accept-Language:`en-US,en;q=0.8,de-AT;q=0.6,de;q=0.4,sl;q=0.2`
 
 Then the __en-US__ locale will be used to localize the response.
 
@@ -456,18 +458,15 @@ if the client resource filed was not changed or a  __200__ if it was.
 # Data Structures
 
 ## Pocket Overview (object)
-+ id: euro_pocket (string, required) - The pocket unique identifier
-+ name: Euro pocket (string, required) - The user friendly name of the pocket
-+ balance: (Balance)
-+ details: /wallets/john124/pockets/euro_pocket (string, required) - The relative link to the pocket details
++ id: eur_realmoney (string, required) - The pocket unique identifier
++ pocket_groups: G1, G2 (array, optional) - The Pocket groups the pocket belongs to
++ name: Euro pocket (string, optional) - The user friendly name of the pocket
++ balance (Balance)
++ details: /wallets/johnswallet/pockets/euro_pocket (string, required) - The relative link to the pocket details
 
-## Pocket Details (object)
-+ id: euro_pocket (string, required) - The pocket unique identifier
+## Pocket Detail (Pocket Overview)
 + type: realmoney (string, required) - The type of the pocket
-+ name: Euro pocket (string, required) - The user friendly name of the pocket
-+ balance: (Balance)
-+ details: /wallets/john124/pockets/euro_pocket (string, required) - The relative link to the pocket details
-+ transactions: /wallets/john124/pockets/euro_pocket/transactions" (string, required) - The relative link to the pocket transactions
++ transactions: /wallets/johnswallet/pockets/euro_pocket/transactions" (string, required) - The relative link to the pocket transactions
 
 ## Balance (object)
 + amount: 120.00 (number, required) - The wallets total balance by currency
@@ -477,63 +476,64 @@ if the client resource filed was not changed or a  __200__ if it was.
     + iso_code: EUR (string, required) - The ISO 4217 currency code
 
 ## Wallet (object)
-+ customer (object)
-    + name: john124 (string, required) - The customers name
-    + id: 12312123123123123 (string, required) - The customers unique identifier
 + total_balance (array[Balance], required)
-+ transactions: wallets/john124/transactions (string, required) - The relative url to the wallet history
-+ debit: wallets/john124/debit (string, required) - The relative url used to debit the current wallet
-+ credit: wallets/john124/credit (string, required) - The relative url used to credit the current wallet
-+ startdebit: wallets/john124/startdebit (string, required) - The relative url used to start a asyncronous debit on the current wallet
-+ startcredit: wallets/john124/startcredit (string, required) - The relative url used to start a asyncronous debit on the current wallet
-+ pockets: (array[Pocket Overview], required)
-
-## Transaction Response (object)
-+ successfull: true (boolean, required) - Determines if the request was Successfull
-+ new_balance (Balance)
-+ transaction_id: sdkjfbsidf123123 (string, required) - The transaction id for the completted transaction
-+ details: /wallets/john124/transactions/sdkjfbsidf123123 (string, required) - The relative URL to the transaction details for this operation
++ transactions: wallets/johnswallet/transactions (string, required) - The relative url to the wallet history
++ debit: wallets/johnswallet/debit (string, required) - The relative url used to debit the current wallet
++ credit: wallets/johnswallet/credit (string, required) - The relative url used to credit the current wallet
++ startdebit: wallets/johnswallet/startdebit (string, required) - The relative url used to start a asyncronous debit on the current wallet
++ startcredit: wallets/johnswallet/startcredit (string, required) - The relative url used to start a asyncronous debit on the current wallet
++ pockets (array[Pocket Overview], required)
 
 ## Async Transaction Response (object)
 + transaction_id: sdkjfbsidf123123 (string, required) - The transaction id for the completted transaction
 + expires_at: `016-02-10T14:31:12Z` (string, required) - The time untill the transaction is keept open
+
+## Transaction Response (object)
++ successfull: true (boolean, required) - Determines if the request was Successfull
++ affected_pockets (array[Pocket Overview])
++ balances (array[Balance])
++ transaction_id: sdkjfbsidf123123 (string, required) - The transaction id for the completted transaction
++ details: /wallets/johnswallet/transactions/sdkjfbsidf123123 (string, required) - The relative URL to the transaction details for this operation
 
 ## Transaction Detail (object)
 + timestamp: `2016-02-12T13:43:22Z` (string, required) - The timestamp of the transaction in UTC
 + status: Completed (string, required) - The status of the transaction. Values are [Completed, Pending, Canceled, Storno]
 + transaction_id: sdkjfbsidf123123 (string, required) - The unique transaction id
 + type: payin (string, required) - The transaction type
-+ direction: credit (string, required) - Denotes if the funds have been credited or debited to the wallet
 + ammount (Balance)
++ tags: payin, customer (array, required) - The associated tags for this transaction
+
+## Transaction Request (object)
++ amount: 20.00 (number, required) - The ammount that the wallet should be changed by
++ pocket: euro_pocket (string, required) - Identifies the pocket affected by the transaction
 + tags: payin, customer (array, required) - The associated tags for this transaction
 
 # Group Wallets
 
-Defines access methods for wallet functionality.
-
-
-## Wallet [/wallets/{user_identifier}]
+## Wallet [/wallets/{wallet}]
 
 Required access grants
 
 | HTTP verb | Grant|
 | :--- | :--- |
 | GET | get_user_wallet |
+| GET | get_wallet_pocket |
 | POST | debit_user_wallet |
 | POST | credit_user_wallet |
 
 + Parameters
-    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+    + wallet: johnswallet (string, required) - The unique web safe id of the wallet
 
 ### Get users wallet [GET]
 
-Retrieves the details for the given wallet, identified by the customer id
+Gets details about the wallet identified by the given wallet id
 
 + Request (application/json)
 
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
+            clientId: adsaf2321224123
 
 + Response 200 (application/json)
 
@@ -541,9 +541,9 @@ Retrieves the details for the given wallet, identified by the customer id
 
     + Header
 
-            Location: wallets/john124
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private
 
 ### Debit/Credit users wallet [POST]
@@ -552,199 +552,162 @@ Debit the users wallet for the given ammount
 
 + Request wit debit (application/json)
 
+    + Attributes(Transaction Request)
+        + operation: debit (string, required) - The operation to execute on the wallet
+
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
+            clientId: adsaf2321224123
 
-    + Body
-
-            {
-                "operation" : "debit",
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "realmoney",
-                "tags" : ["debit", "user"]
-            }
 
 + Request with credit (application/json)
 
+    + Attributes(Transaction Request)
+        + operation: credit (string, required) - The operation to execute on the wallet
+
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
-
-    + Body
-
-            {
-                "operation" : "credit",
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "realmoney",
-                "tags" : ["debit", "user"]
-            }
+            clientId: adsaf2321224123
 
 + Response 200 (application/json)
     + Attributes(Transaction Response)
 
     + Header
 
-            Location: wallets/john124
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private
 
-## Debit users wallet [/wallets/{user_identifier}/debit]
+## Debit users wallet [/wallets/{wallet}/debit]
 
 | HTTP verb | Grant|
 | :--- | :--- |
 | POST | debit_user_wallet |
 
 + parameters
-    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+    + wallet: johnswallet (string) : A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Debit users wallet [POST]
 
 + Request (application/json)
 
+    + Attributes(Transaction Request)
+
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
-
-    + Body
-
-            {
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "euro_pocket",
-                "tags" : ["debit", "user"]
-            }
+            clientId: adsaf2321224123
 
 + Response 200 (application/json)
     + Attributes(Transaction Response)
 
     + Header
 
-            Location: wallets/john124
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private
 
-## Credit users wallet [/wallets/{user_identifier}/credit]
+## Credit users wallet [/wallets/{wallet}/credit]
 
 | HTTP verb | Grant|
 | :--- | :--- |
 | POST | credit_user_wallet |
 
 + parameters
-    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+    + wallet: johnswallet (string) : A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Credit users wallet [POST]
 
 + Request (application/json)
+    + Attributes(Transaction Response)
 
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
+            clientId: adsaf2321224123
 
-    + Body
-
-            {
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "euro_pocket",
-                "tags" : ["debit", "user"]
-            }
 
 + Response 200 (application/json)
     + Attributes (Transaction Response)
 
     + Header
 
-            Location: wallets/john124
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private
 
-## Begin asyncronous debit [/wallets/{user_identifier}/startdebit]
+## Begin asyncronous debit [/wallets/{wallet}/startdebit]
 
 | HTTP verb | Grant|
 | :--- | :--- |
 | POST | debit_async_user_wallet |
 
 + parameters
-    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+    + wallet: johnswallet (string) : A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Debit users wallet [POST]
 
 + Request (application/json)
+    + Attributes(Transaction Request)
 
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
-
-    + Body
-
-            {
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "realmoney",
-                "tags" : ["debit", "user"]
-            }
+            clientId: adsaf2321224123
 
 + Response 206 (application/json)
     + Attributes(Async Transaction Response)
 
     + Header
 
-            Location: wallets/john124
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private
 
-## Begin asyncronous creadit [/wallets/{user_identifier}/startcredit]
+## Begin asyncronous creadit [/wallets/{wallet}/startcredit]
 
 | HTTP verb | Grant|
 | :--- | :--- |
 | POST | credit_async_user_wallet |
 
 + parameters
-    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+    + wallet: johnswallet (string) : A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Credit users wallet [POST]
 
 + Request (application/json)
+    + Attributes(Transaction Request)
 
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
-
-    + Body
-
-            {
-                "amount" : 20.00,
-                "currency" : "EUR",
-                "pocket" : "realmoney",
-                "tags" : ["debit", "user"]
-            }
+            clientId: adsaf2321224123
 
 + Response 206 (application/json)
     + Attributes(Async Transaction Response)
 
     + Header
 
-            Location: wallets/john124
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private
 
 
-## Storno transaction [/wallets/{user_identifier}/storno]
+## Storno transaction [/wallets/{wallet}/storno]
 
 | HTTP verb | Grant|
 | :--- | :--- |
 | POST | storno_user_wallet |
 
 + parameters
-    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+    + wallet: johnswallet (string) : A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Storno transaction [POST]
 
@@ -753,6 +716,7 @@ Debit the users wallet for the given ammount
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
+            clientId: adsaf2321224123
 
     + Body
 
@@ -766,9 +730,9 @@ Debit the users wallet for the given ammount
 
     + Header
 
-            Location: wallets/john124
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private
 
     + Body
@@ -778,7 +742,7 @@ Debit the users wallet for the given ammount
                 "storno_transaction_id" : "023842poijflafijh8f73z920jfjow"
             }
 
-## Cancel an ongoing transaction [/wallets/{user_identifier}/cancel]
+## Cancel an ongoing transaction [/wallets/{wallet}/cancel]
 
 | HTTP verb | Grant|
 | :--- | :--- |
@@ -786,7 +750,7 @@ Debit the users wallet for the given ammount
 | POST | credit_async_user_wallet |
 
 + parameters
-    + user_identifier: john124 (string) : A mandatory stirng whith which we can uniquelly identify a single user
+    + wallet: johnswallet (string) : A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Cancel transaction [POST]
 
@@ -800,17 +764,18 @@ Debit the users wallet for the given ammount
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
+            clientId: adsaf2321224123
 
 + Response 204 (application/json)
 
     + Header
 
-            Location: wallets/john124
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private
 
-## Complete an ongoing transaction [/wallets/{user_identifier}/commit]
+## Complete an ongoing transaction [/wallets/{wallet}/commit]
 
 | HTTP verb | Grant|
 | :--- | :--- |
@@ -818,7 +783,7 @@ Debit the users wallet for the given ammount
 | POST | credit_async_user_wallet |
 
 + parameters
-    + user_identifier: john124 (string) - A mandatory stirng whith which we can uniquelly identify a single user
+    + wallet: johnswallet (string) - A mandatory stirng whith which we can uniquelly identify a single user
 
 ### Complete transaction [POST]
 
@@ -830,25 +795,28 @@ Debit the users wallet for the given ammount
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
+            clientId: adsaf2321224123
 
 + Response 200 (application/json)
     + Attributes (Transaction Response)
 
     + Header
 
-            Location: wallets/john124
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private
 
-## Get the wallets transaction history [/wallets/{user_identifier}/transactions]
+
+## Get the wallets transaction history [/wallets/{wallet}/transactions]
 
 | HTTP verb | Grant|
 | :--- | :--- |
 | GET | view_wallet_history |
 
 + parameters
-    + user_identifier: john124 (string) - A mandatory stirng whith which we can uniquelly identify a single user
+    + wallet: johnswallet (string) - A mandatory stirng whith which we can uniquelly identify a single user
+
 
 ### Get wallet transaction history [GET]
 
@@ -857,27 +825,30 @@ Debit the users wallet for the given ammount
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
+            clientId: adsaf2321224123
 
 + Response 200 (application/json)
-    + Attributes(array[Transaction Detail])
+    + Attributes(object)
+        + transactions (array[Transaction Detail])
 
     + Header
 
-            Location: wallets/john124/pockets/euro_pocket
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet/pockets/euro_pocket
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private
 
 
-## Get wallets individual pocket details [/wallets/{user_identifier}/pockets/{pocket_identifier}]
+## Get wallets individual pocket details [/wallets/{wallet}/pockets/{pocket}]
 
-HTTP verb | Grant|
+| HTTP verb | Grant|
 | :--- | :--- |
 | GET | view_wallet_pockets |
 
 + parameters
-   + user_identifier: john124 (string, required) - A mandatory stirng whith which we can uniquelly identify a single user
-   + pocket_identifier: euro_pocket (string, required) - String uniquelly identifying the pocket for which details should be retrieved
+   + wallet: johnswallet (string, required) - A mandatory stirng whith which we can uniquelly identify a single user
+   + pocket: euro_pocket (string, required) - String uniquelly identifying the pocket for which details should be retrieved
+
 
 ### Get pocket details [GET]
 
@@ -886,26 +857,28 @@ HTTP verb | Grant|
     + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
+            clientId: adsaf2321224123
 
 + Response 200 (application/json)
-    + Attributes(Pocket Details)
+    + Attributes(Pocket Detail)
 
     + Header
 
-            Location: wallets/john124/pockets/euro_pocket
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet/pockets/euro_pocket
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private
 
-## Get wallets individual pockets transactions [/wallets/{user_identifier}/pockets/{pocket_identifier}/transactions]
 
-HTTP verb | Grant|
+## Get wallets individual pockets transactions [/wallets/{wallet}/pockets/{pocket}/transactions/]
+
+| HTTP verb | Grant|
 | :--- | :--- |
 | GET | view_wallet_pocket_history |
 
 + Parameters
-   + user_identifier: john124 (string, required) - A mandatory stirng whith which we can uniquelly identify a single user
-   + pocket_identifier: euro_pocket (string, required) - String uniquelly identifying the pocket whose history should be retrieved
+   + wallet: johnswallet (string, required) - A mandatory stirng whith which we can uniquelly identify a single user
+   + pocket: euro_pocket (string, required) - String uniquelly identifying the pocket whose history should be retrieved
 
 ### Get pocket history [GET]
 
@@ -914,13 +887,16 @@ HTTP verb | Grant|
    + Header
 
             AccessToken: ijsefh938ru23p40i20irjdw09d832
+            clientId: adsaf2321224123
 
 + Response 200 (application/json)
-    + Attributes (array[Transaction Detail])
+
+    + Attributes(object)
+        + transactions (array[Transaction Detail])
 
    + Header
 
-            Location: wallets/john124/pockets/euro_pocket/transactions
-            Expires: Sun, 08 Nov 2015 21:11:41 +0000
-            Last-Modified: Thu, 04 Jun 2015 21:11:41 +0000
+            Location: wallets/johnswallet/pockets/euro_pocket/transactions
+            Expires: Sun, 08 Nov 2015 21:11:41Z
+            Last-Modified: Thu, 04 Jun 2015 21:11:41Z
             Cache-Control: private

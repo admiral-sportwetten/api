@@ -38,8 +38,9 @@ Except for special cases the following meanings, for HTTP verbs,  will be assume
 | 304 | The requested document was not modified |
 | 400 | The request could not be understood by the server |
 | 401 | The request requires user authentication which was not provided |
-| 403 | The server understood the request but will not fulfill it |
+| 403 | The server understood the request but the request is not authorized to access the desired resource |
 | 404 | The requested resource was not found |
+| 419 | The Authentication timed out |
 | 429 | The server will not process the request because the request quota is reached |
 | 500 | The server encountered an unrecoverable exception, which prevents the request to complete |
 | 501 | The requested functionality is not implemented or you are not authorized to use it |
@@ -60,7 +61,7 @@ added by the API itself to include additional meta-information in the response.
 
  Taking that the following Language header is present in the request
 
-        Accept-Language:en-US,en;q=0.8,de-AT;q=0.6,de;q=0.4,sl;q=0.2
+        Accept-Language:`en-US,en;q=0.8,de-AT;q=0.6,de;q=0.4,sl;q=0.2`
 
 Then the __en-US__ locale will be used to localize the response.
 

@@ -51,7 +51,7 @@ The _Admiral API_ takes full advantage of _HTTP headers_. Some headers can be
 added to the request to influence the API response, while some headers are
 added by the API itself to include additional meta-information in the response.
 
- ### Accept-Language
+### Accept-Language
 
  If the _Accept-Language_ header is used in any request then the API will try to return
  a localized version of the response.
